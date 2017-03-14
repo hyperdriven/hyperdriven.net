@@ -1,0 +1,78 @@
+baseurl = "https://hyperdriven.net/"
+languageCode = "en-us"
+title = "Hyperdrive"
+theme = "hugo-material-docs"
+metadataformat = "yaml"
+canonifyurls = true
+# Enable Google Analytics by entering your tracking id
+googleAnalytics = ""
+
+[params]
+# General information
+author = "Hyperdrive"
+description = "An opinionated microframework for creating hypermedia APIs in Go"
+copyright = "Hyperdrive is released under the MIT license."
+
+# Repository
+provider = "GitHub"
+repo_url = "https://github.com/hyperdriven/hyperdrive"
+
+version = "0.0.4"
+#logo = "images/logo.png"
+favicon = ""
+
+permalink = "#"
+
+# Custom assets
+custom_css = []
+custom_js  = []
+
+# Syntax highlighting theme
+highlight_css  = ""
+
+[params.palette]
+primary = "blue"
+accent  = "light-blue"
+
+[params.font]
+text = "Ubuntu"
+code = "Ubuntu Mono"
+
+
+[social]
+twitter = ""
+github  = "hyperdriven"
+email   = "hello@hyperdriven.com"
+
+
+[[menu.main]]
+name   = "Home"
+url    = "/"
+weight = 10
+
+[[menu.main]]
+name   = "Quick Start"
+url    = "quick-start/"
+weight = 20
+
+[[menu.main]]
+name   = "Configuration"
+url    = "configuration/"
+weight = 30
+
+[[menu.main]]
+name   = "Project"
+url    = "project/"
+weight = 40
+
+[[menu.main]]
+name   = "License"
+url    = "license/"
+weight = 50
+
+
+[blackfriday]
+smartypants	= true
+fractions = true
+smartDashes = true
+plainIDAnchors = true

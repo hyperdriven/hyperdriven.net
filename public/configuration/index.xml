@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Configurations on Hyperdrive</title>
+    <link>https://hyperdriven.net/configuration/index.xml</link>
+    <description>Recent content in Configurations on Hyperdrive</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Hyperdrive is released under the MIT license.</copyright>
+    <lastBuildDate>Mon, 13 Mar 2017 23:18:00 +0000</lastBuildDate>
+    <atom:link href="https://hyperdriven.net/configuration/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Configuration</title>
+      <link>https://hyperdriven.net/configuration/</link>
+      <pubDate>Mon, 13 Mar 2017 23:18:00 +0000</pubDate>
+      
+      <guid>https://hyperdriven.net/configuration/</guid>
+      <description>
+
+&lt;p&gt;Configuration of core features are done via Environment Variables, in accordence with &lt;a href=&#34;https://12factor.net/config&#34;&gt;12 factor&lt;/a&gt; principles.&lt;/p&gt;
+
+&lt;h2 id=&#34;environment&#34;&gt;Environment&lt;/h2&gt;
+
+&lt;p&gt;The stage in your deployment pipeline the api is currently running in. A value of &lt;code&gt;production&lt;/code&gt; changes behviour for some features (such as whether stack traces are logged during panic recovery). Other values, such as &lt;code&gt;staging&lt;/code&gt;, can be used but currently have no meanin in the framework other than the one you give it in your own code.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;var: &lt;code&gt;HYPERDRIVE_ENV&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;default: &lt;code&gt;development&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;type: &lt;code&gt;string&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;port&#34;&gt;Port&lt;/h2&gt;
+
+&lt;p&gt;The port the server should listen on.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;var: &lt;code&gt;PORT&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;default: &lt;code&gt;5000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;type: &lt;code&gt;int&lt;/code&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;compression&#34;&gt;Compression&lt;/h2&gt;
+
+&lt;p&gt;Accepts a value between &lt;code&gt;-2&lt;/code&gt; and &lt;code&gt;9&lt;/code&gt;. Invalid values will be silently discarded and the default of &lt;code&gt;-1&lt;/code&gt; will be used. More info on compression levels can be found in hyperdrive&amp;rsquo;s &lt;a href=&#34;https://godoc.org/github.com/hyperdriven/hyperdrive#API.CompressionMiddleware&#34;&gt;godoc&lt;/a&gt;, but generally corresponds to &lt;code&gt;zlib&lt;/code&gt; compression levels.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;var: &lt;code&gt;GZIP_LEVEL&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;default: &lt;code&gt;-1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;type: &lt;code&gt;int&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;cors&#34;&gt;CORS&lt;/h2&gt;
+
+&lt;h3 id=&#34;enable-cors-middleware&#34;&gt;Enable CORS Middleware&lt;/h3&gt;
+
+&lt;p&gt;Set this to &lt;code&gt;false&lt;/code&gt; to disable CORS support.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;var: &lt;code&gt;CORS_ENABLED&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;default: &lt;code&gt;true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;allowed-headers&#34;&gt;Allowed Headers&lt;/h3&gt;
+
+&lt;p&gt;A comma-seperated list of headers to allow and expose during CORS requests. These will be appended to the default set of headers that are always allowed: &lt;code&gt;Accept&lt;/code&gt;, &lt;code&gt;Accept-Language&lt;/code&gt;, &lt;code&gt;Content-Language&lt;/code&gt;, and &lt;code&gt;Content-Type&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;var: &lt;code&gt;CORS_HEADERS&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;type: &lt;code&gt;string&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;allowed-origins&#34;&gt;Allowed Origins&lt;/h3&gt;
+
+&lt;p&gt;A comma-seperated list of origins to allow during CORS requests. These will replace the default value, which is to allow all origins.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;CORS_ORIGINS&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;default &lt;code&gt;*&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;type: &lt;code&gt;string&lt;/code&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;allow-credentials&#34;&gt;Allow Credentials&lt;/h3&gt;
+
+&lt;p&gt;Set this to &lt;code&gt;false&lt;/code&gt; to disable authenticated CORS requests.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;var: &lt;code&gt;CORS_CREDENTIALS&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;default: &lt;code&gt;true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;type: &lt;code&gt;bool&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
