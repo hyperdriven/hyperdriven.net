@@ -1,7 +1,6 @@
 ---
 date: 2017-03-14T16:10:26-05:00
 title: Community
-type: index
 weight: 50
 ---
 

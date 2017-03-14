@@ -13,7 +13,7 @@ Hyperdrive helps you focus on writing great APIs, with little-to-no boiler plate
 
 ## Features
 
-- Resource-Oriented 
+- Resource-Oriented
 - Flexible and Powerful HTTP Method handling
 - Automatic Content Negotiation
 - Built-In Resource Versioning, via Media Types
