@@ -71,14 +71,19 @@ url    = "community/"
 weight = 50
 
 [[menu.main]]
+name   = "Contributing"
+url    = "contributing/"
+weight = 60
+
+[[menu.main]]
 name   = "Code of Conduct"
 url    = "code-of-conduct/"
-weight = 60
+weight = 70
 
 [[menu.main]]
 name   = "License"
 url    = "license/"
-weight = 70
+weight = 80
 
 
 [blackfriday]

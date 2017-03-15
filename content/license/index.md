@@ -1,7 +1,7 @@
 ---
 date: 2017-03-13T23:24:00+00:00
 title: License
-weight: 60
+weight: 80
 ---
 
 MIT License

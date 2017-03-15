@@ -1,7 +1,7 @@
 ---
 date: 2017-03-14T15:54:10-05:00
 title: Code of Conduct
-weight: 60
+weight: 70
 ---
 
 # Contributor Covenant Code of Conduct
