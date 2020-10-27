@@ -1,0 +1,33 @@
+version: 0.2
+env:
+  variables:
+    LANG: en_US.UTF-8
+    PROJECT: hyperdriven.net
+    GO111MODULE: on
+    GOPATH: /opt/go
+
+cache:
+  paths:
+    - 'vendor/**/*'
+
+artifacts:
+  base-directory: public
+  files:
+    - "**/*"
+
+phases:
+  install:
+    commands:
+      - echo INSTALL started on `date`
+      - make init
+      - echo INSTALL completed on `date`
+
+  build:
+    commands:
+      - echo TEST started on `date`
+      - make test
+      - echo TEST completed on `date`
+
+      #- echo VALIDATE started on `date`
+      #- make validate
+      #- echo VALIDATE completed on `date`

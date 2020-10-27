@@ -1,0 +1,232 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: hyperdriven.net
+
+Parameters:
+  HostedbyXentekReusableDelegationSetID:
+    Type: String
+    Default: NU451RJ3WP51J
+  HyperdrivenNetHostedZoneID:
+    Type: String
+    Default: Z24RKFNYVAKPOG
+  CloudFrontAliasHostedZoneId:
+    Type: String
+    Default: Z2FDTNDATAQYW2
+
+Resources:
+  HyperdrivenNetRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !Ref HyperdrivenNetHostedZoneID
+      RecordSets:
+        - Name: hyperdriven.net.
+          Type: MX
+          TTL: 300
+          ResourceRecords:
+            - '10 aspmx.l.google.com.'
+            - '20 alt1.aspmx.l.google.com.'
+            - '20 alt2.aspmx.l.google.com.'
+            - '30 aspmx2.googlemail.com.'
+            - '30 aspmx3.googlemail.com.'
+            - '30 aspmx4.googlemail.com.'
+            - '30 aspmx5.googlemail.com.'
+        - Name: hyperdriven.net.
+          Type: TXT
+          TTL: '300'
+          ResourceRecords:
+            - '"v=spf1 include:_spf.google.com ~all"'
+        - Name: _dmarc.hyperdriven.net.
+          Type: TXT
+          TTL: '300'
+          ResourceRecords:
+            - '"v=DMARC1; p=none; rua=mailto:postmaster@hostedbyxentek.net"'
+        - Name: g._domainkey.hyperdriven.net.
+          Type: TXT
+          TTL: '300'
+          ResourceRecords:
+            - '"v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCW/ujbGBtm6+JcbtiSiCINb2r3hLUVr4I9/K/k/1ygKvJINUDAfsSMcVGqXxmggS6EAWDgaHMnaTyM5GIeLtjJI8ab6/cVMKJ2ozWUDEs3Cxgz8IaXw7QGCj0/BONkyU4i3zpGhXgbGNN6cTIQfnU8GjcCXVaayiFqI1IssHYLywIDAQAB"'
+        - Name: _23b959889ed92b9695cff71ae71126b7.hyperdriven.net.
+          Type: CNAME
+          TTL: '300'
+          ResourceRecords:
+            - 274932b416430ddbd01022bd5ee3fc6b.vhzmpjdqfx.acm-validations.aws.
+
+  HyperdrivenBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      BucketName: hyperdriven.net
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: false
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  HyperdrivenOAI:
+    DependsOn: HyperdrivenBucket
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: "hyperdriven.net"
+
+  HyperdrivenBucketPolicy:
+    DependsOn: HyperdrivenOAI
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref HyperdrivenBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Id: hyperdriven-bucket-policy
+        Statement:
+          - Principal:
+              CanonicalUser: !GetAtt HyperdrivenOAI.S3CanonicalUserId
+            Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource: !Join ["",["arn:aws:s3:::", !Ref HyperdrivenBucket,"/*"]]
+
+  HyperdrivenCert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: hyperdriven.net
+      SubjectAlternativeNames:
+        - '*.hyperdriven.net'
+      Tags:
+        - Key: project
+          Value: hyperdriven
+      ValidationMethod: DNS
+
+  HyperdrivenCDN:
+    DependsOn:
+      - HyperdrivenCert
+      - HyperdrivenBucket
+      - HyperdrivenBucketPolicy
+      - HyperdrivenOAI
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - "hyperdriven.net"
+          - "www.hyperdriven.net"
+        Comment: "hyperdriven.net"
+        Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: true
+        Origins:
+          - DomainName: !GetAtt HyperdrivenBucket.DomainName
+            Id: !GetAtt HyperdrivenBucket.DomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Join ["",["origin-access-identity/cloudfront/", !Ref HyperdrivenOAI]]
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn: !Ref HyperdrivenCert
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.1_2016
+        CacheBehaviors:
+          - PathPattern: "images/*"
+            TargetOriginId: !GetAtt HyperdrivenBucket.DomainName
+            AllowedMethods:
+              - HEAD
+              - GET
+              - OPTIONS
+            CachedMethods:
+              - HEAD
+              - GET
+              - OPTIONS
+            Compress: true
+            DefaultTTL: 86400
+            MinTTL: 0
+            MaxTTL: 31536000
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: none
+            SmoothStreaming: false
+            ViewerProtocolPolicy: redirect-to-https
+          - PathPattern: "javascripts/*"
+            TargetOriginId: !GetAtt HyperdrivenBucket.DomainName
+            AllowedMethods:
+              - HEAD
+              - GET
+              - OPTIONS
+            CachedMethods:
+              - HEAD
+              - GET
+              - OPTIONS
+            Compress: true
+            DefaultTTL: 86400
+            MinTTL: 0
+            MaxTTL: 86400
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: none
+            SmoothStreaming: false
+            ViewerProtocolPolicy: redirect-to-https
+          - PathPattern: "fonts/*"
+            TargetOriginId: !GetAtt HyperdrivenBucket.DomainName
+            AllowedMethods:
+              - HEAD
+              - GET
+              - OPTIONS
+            CachedMethods:
+              - HEAD
+              - GET
+              - OPTIONS
+            Compress: true
+            DefaultTTL: 86400
+            MinTTL: 0
+            MaxTTL: 86400
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: none
+            SmoothStreaming: false
+            ViewerProtocolPolicy: redirect-to-https
+        DefaultCacheBehavior:
+          TargetOriginId: !GetAtt HyperdrivenBucket.DomainName
+          AllowedMethods:
+            - HEAD
+            - GET
+            - OPTIONS
+          CachedMethods:
+            - HEAD
+            - GET
+            - OPTIONS
+          Compress: true
+          DefaultTTL: 60
+          MinTTL: 0
+          MaxTTL: 300
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: none
+          SmoothStreaming: false
+          ViewerProtocolPolicy: redirect-to-https
+        CustomErrorResponses:
+          - ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 60
+            ErrorCode: 403
+            ResponseCode: 200
+          - ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 60
+            ErrorCode: 404
+            ResponseCode: 200
+
+  HyperdrivenAliasRecords:
+    DependsOn: HyperdrivenCDN
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !Ref HyperdrivenNetHostedZoneID
+      RecordSets:
+        - Name: hyperdriven.net.
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt HyperdrivenCDN.DomainName
+            HostedZoneId: !Ref CloudFrontAliasHostedZoneId
+        - Name: www.hyperdriven.net.
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt HyperdrivenCDN.DomainName
+            HostedZoneId: !Ref CloudFrontAliasHostedZoneId
