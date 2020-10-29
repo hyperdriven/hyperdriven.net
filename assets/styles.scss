@@ -3,6 +3,11 @@
 @import "css/main.scss";
 
 html {
-  background: url(/img/event-horizon.jpg) no-repeat center center fixed;
-  background-size: cover;
+  background-color: #011d35;
+}
+
+section {
+  font-family: Helvetica, sans-serif;
+  color: #f3f3f3;
+  text-align: center;
 }

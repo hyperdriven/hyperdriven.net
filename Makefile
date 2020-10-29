@@ -25,10 +25,11 @@ build: jpg png favicon css
 
 # build jpgs
 jpg:
-	jpegtran -copy none -optimize -progressive assets/img/event-horizon.jpg > public/img/event-horizon.jpg
+	jpegtran -copy none -optimize -progressive assets/img/retro-rocket.jpg > public/img/retro-rocket.jpg
 
 # build pngs
 png:
+	optipng -clobber -strip all -o7 -dir public/img assets/img/retro-rocket.png
 	optipng -clobber -strip all -o7 -dir public assets/img/tile.png
 	optipng -clobber -strip all -o7 -dir public assets/img/tile-wide.png
 	optipng -clobber -strip all -o7 -dir public assets/img/icon.png
