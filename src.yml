@@ -124,7 +124,7 @@ Resources:
           SslSupportMethod: sni-only
           MinimumProtocolVersion: TLSv1.1_2016
         CacheBehaviors:
-          - PathPattern: "images/*"
+          - PathPattern: "img/*"
             TargetOriginId: !GetAtt HyperdrivenBucket.DomainName
             AllowedMethods:
               - HEAD
@@ -144,7 +144,7 @@ Resources:
                 Forward: none
             SmoothStreaming: false
             ViewerProtocolPolicy: redirect-to-https
-          - PathPattern: "javascripts/*"
+          - PathPattern: "js/*"
             TargetOriginId: !GetAtt HyperdrivenBucket.DomainName
             AllowedMethods:
               - HEAD

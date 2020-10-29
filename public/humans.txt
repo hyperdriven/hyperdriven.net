@@ -1,0 +1,7 @@
+# humanstxt.org/
+# The humans responsible
+
+# TEAM
+    Eric Marden -- CTO -- @xentek
+
+# THANKS

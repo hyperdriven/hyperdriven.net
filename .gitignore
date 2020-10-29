@@ -420,5 +420,6 @@ tags
 .history
 
 # End of https://www.gitignore.io/api/go,osx,vim,node,ruby,rails,direnv,python,textmate,visualstudiocode
+*.bak
 dist.yml
 !.gitkeep # must be last

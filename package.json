@@ -1,0 +1,13 @@
+{
+  "name": "hyperdriven.net",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Eric Marden <eric.marden@gmail.com>",
+  "main": "main.js",
+  "devDependencies": {
+    "eslint": "^7.12.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "serve": "^11.3.2"
+  }
+}

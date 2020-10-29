@@ -1,23 +1,49 @@
+include github.com/xentek/makefiles/assets
 include .env
 .PHONY := default init test build pkg validate deploy cb
 .DEFAULT_GOAL = default
 
-STORE = hostedbyxentek-cloud
+STORE = xentek-cloud
 PROJECT ?= $(shell basename $$PWD)
+
+define jpg
+endef
 
 default:
 	@ mmake help
 
 # init project
-init: env
+init: env install-sassc install-jpegtran install-optipng install-png2ico
+	@ yarn
 
 # run tests
 test:
 	@ echo "no tests to run"
 
 # build project
-build:
-	@ echo "nothing to build"
+build: jpg png favicon css
+
+# build jpgs
+jpg:
+	jpegtran -copy none -optimize -progressive assets/img/event-horizon.jpg > public/img/event-horizon.jpg
+
+# build pngs
+png:
+	optipng -clobber -strip all -o7 -dir public assets/img/tile.png
+	optipng -clobber -strip all -o7 -dir public assets/img/tile-wide.png
+	optipng -clobber -strip all -o7 -dir public assets/img/icon.png
+
+# build icons
+ico:
+	@ png2ico assets/favicon.ico assets/img/favicon.png
+
+# build styles
+css:
+	sassc -I assets/css -t compressed assets/styles.scss public/css/styles.css
+
+# start server
+start: build
+	@  cd public && serve -p 8181
 
 # package stack
 pkg: build
@@ -37,6 +63,7 @@ deploy: | test validate
 		--template-file dist.yml \
 		--s3-bucket ${STORE} \
 		--stack-name ${STACK}
+	@ scripts/deploy
 
 # pull latest .env file
 env:
